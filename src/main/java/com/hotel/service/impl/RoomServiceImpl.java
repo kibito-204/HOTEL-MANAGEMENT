@@ -37,7 +37,7 @@ public class RoomServiceImpl implements RoomService {
     public RoomDTO updateRoom(Long id, RoomDTO roomDTO) {
         Room room = roomRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Room not found with id: " + id));
-        BeanUtils.copyProperties(roomDTO, room, "id", "roomNumber","status");
+        BeanUtils.copyProperties(roomDTO, room, "id", "roomNumber");
         room = roomRepository.save(room);
         BeanUtils.copyProperties(room, roomDTO);
         return roomDTO;
