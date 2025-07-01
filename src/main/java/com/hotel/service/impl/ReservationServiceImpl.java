@@ -68,7 +68,7 @@ public class ReservationServiceImpl implements ReservationService {
             }
             if (isOverlapping(reservationDTO.getCheckIn(), reservationDTO.getCheckOut(),
                     existingReservation.getCheckIn(), existingReservation.getCheckOut())
-                && (existingReservation.getStatus() == ReservationStatus.CHECKED_IN
+                && (existingReservation.getStatus() == ReservationStatus.PENDING||existingReservation.getStatus() == ReservationStatus.CHECKED_IN
                     || existingReservation.getStatus() == ReservationStatus.CONFIRMED)) {
                 throw new ValidationException("Phòng đã được đặt trong khoảng thời gian này");
             }
@@ -135,7 +135,7 @@ public class ReservationServiceImpl implements ReservationService {
             if (isOverlapping(reservationDTO.getCheckIn(), reservationDTO.getCheckOut(),
                     existing.getCheckIn(), existing.getCheckOut())
                 && (existing.getStatus() == ReservationStatus.CONFIRMED
-                    || existing.getStatus() == ReservationStatus.CHECKED_IN)) {
+                    || existing.getStatus() == ReservationStatus.PENDING)) {
                 throw new ValidationException("Phòng đã được đặt trong khoảng thời gian này");
             }
         }
