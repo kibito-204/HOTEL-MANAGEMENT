@@ -4,6 +4,8 @@ import com.example.demo.dto.RoomDTO;
 import com.example.demo.entity.Room;
 import com.example.demo.entity.RoomStatus;
 import com.example.demo.entity.RoomType;
+import com.example.demo.exception.InvalidRequestException;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.RoomRepository;
 import com.example.demo.service.RoomService;
 import jakarta.validation.ValidationException;
@@ -36,7 +38,7 @@ public class RoomServiceImpl implements RoomService {
         List<Room> abc = roomRepository.findAll();
         for(Room x : abc) {
             if (dto.getNumber().equals(x.getNumber())){
-                throw new ValidationException("Số phòng đã được tạo");
+                throw new InvalidRequestException("Số phòng đã được tạo");
             }
         }
         BeanUtils.copyProperties(dto, room);
@@ -47,7 +49,7 @@ public class RoomServiceImpl implements RoomService {
     }
     @Override
     public RoomDTO UpdateRoom(RoomDTO dto, Long id){
-        Room room = roomRepository.findById(id).orElseThrow(() -> new ValidationException("Không tìm thấy phòng"));
+        Room room = roomRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy phòng"));
         List<Room> x = roomRepository.findAll();
         for(Room a:x){
             if(a.getId().equals(id)){
@@ -64,12 +66,12 @@ public class RoomServiceImpl implements RoomService {
     }
     @Override
     public void DeleteRoom(Long id){
-        Room room = roomRepository.findById(id).orElseThrow(()-> new RuntimeException("Không tìm thấy phòng"));
+        Room room = roomRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Không tìm thấy phòng"));
         roomRepository.delete(room);
     }
     @Override
     public RoomDTO UpdateStatusRoom(RoomStatus status, Long id){
-        Room room = roomRepository.findById(id).orElseThrow(() -> new RuntimeException("Không tìm thấy phòng"));
+        Room room = roomRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy phòng"));
         RoomDTO dto = new RoomDTO();
         room.setRoomStatus(status);
         room = roomRepository.save(room);

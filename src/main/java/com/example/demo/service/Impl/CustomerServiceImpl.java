@@ -2,9 +2,10 @@ package com.example.demo.service.Impl;
 
 import com.example.demo.dto.CustomerDTO;
 import com.example.demo.entity.Customer;
+import com.example.demo.exception.InvalidRequestException;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.CustomerRepository;
 import com.example.demo.service.CustomerService;
-import jakarta.validation.ValidationException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,10 +33,10 @@ public class CustomerServiceImpl implements CustomerService {
         List<Customer> customer1 = customerRepository.findAll();
         for(Customer x:customer1) {
             if (customerDTO.getPhone().equals(x.getPhone())){
-                throw new RuntimeException("Số điện thoại đã bị trùng");
+                throw new InvalidRequestException("Số điện thoại đã bị trùng");
             }
             if(customerDTO.getEmail().equals(x.getEmail())){
-                throw new RuntimeException("Email đã bị trùng");
+                throw new InvalidRequestException("Email đã bị trùng");
             }
         }
         BeanUtils.copyProperties(customerDTO,customer);
@@ -46,17 +47,17 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public CustomerDTO UpdateCustomer(CustomerDTO dto, Long id){
         Customer customer = customerRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy khách hàng"));
+                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy khách hàng"));
         List<Customer> customer1 = customerRepository.findAll();
         for(Customer x : customer1) {
             if(x.getId().equals(customer.getId())){
                 continue;
             }
             if (dto.getPhone().equals(x.getPhone())){
-                throw new RuntimeException("Số điện thoại đã bị trùng");
+                throw new InvalidRequestException("Số điện thoại đã bị trùng");
             }
             if(dto.getEmail().equals(x.getEmail())){
-                throw new RuntimeException("Email đã bị trùng");
+                throw new InvalidRequestException(  "Email đã bị trùng");
             }
         }
         BeanUtils.copyProperties(dto, customer, "id");
@@ -67,7 +68,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public void DeleteCustomer(Long id){
         Customer customer = customerRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy khách hàng"));
+                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy khách hàng"));
         customerRepository.delete(customer);
     }
     @Override
